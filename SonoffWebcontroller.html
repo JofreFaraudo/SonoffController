@@ -1,0 +1,50 @@
+<html lang="ca-es">
+	<head>
+		<title>Controlador web de Sonoff</title>
+		<link rel="icon" href="favicon.png">
+		<style>.btn-outline-warning:hover{color:white !important}body{background:#DDD !important;padding-top:1rem;cursor:default !important;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}.ctrl-btn{width:100px}.ctrl-btn.btn-danger::before{content:"Apagat"}.ctrl-btn.btn-primary::before{content:"Encès"}.ctrl-btn.btn-danger:hover::before{content:"Encén"}.ctrl-btn.btn-primary:hover:before{content:"Apaga"}</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript" language="javascript"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<body>
+		<div class="container">
+			<noscript>
+				<div class="card">
+					<h1 class="card-header bg-danger text-white">Error!</h1>
+					<div class="card-body text-danger border border-danger">Si us plau, activi el Javascript.</div>
+				</div>
+			</noscript>
+			<div class="card" id="page-body" style="display:none">
+				<h2 class="card-header bg-info text-white">Controlador WEB dels Sonoff</h2>
+				<div class="card-body border border-info">
+					<div class="row" id="sonoff-menu">
+					</div>
+				</div>
+				<div class="card-footer bg-white text-info border border-info">
+					<span>General:</span>
+					<button class="btn btn-sm btn-outline-success general-btn" jsaction="allON">Engega-ho tot</button>
+					<button class="btn btn-sm btn-outline-warning general-btn" jsaction="allOFF">Apaga-ho tot</button>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" language="javascript">
+			$(document).ready(function(){
+				$("html").contextmenu(function(e){
+					e.preventDefault()
+				});
+				var sonoff = ["ToSonoff","TupiSon","SonoffGranota","SonoffPro"];
+				sonoff.forEach(function(n){
+					$("#sonoff-menu").append("<div class=\"col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6\"><h3>"+n+"</h3><span>Estat:</span> <button class=\"btn btn-danger ctrl-btn\" jsdata=\""+n+"\"></button></div>")
+				});
+				$("#page-body").fadeIn(600);
+				$(".ctrl-btn").click(function(){
+					var e = $(this).hasClass("btn-primary");
+					console.log(this);
+					$(this).addClass("btn-"+(e ? "danger" : "primary")).removeClass("btn-"+((e ? "primary" : "danger"))).blur()
+					$.post("https://maker.ifttt.com/trigger/"+$(this).attr("jsdata")+(e ? "off" : "on")+"/with/key/eTlEveh-Yy67KqAwWju8ljYE0JPFnfm-WvEq_KdGgzp")
+				})
+			})
+		</script>
+	</body>
+</html>

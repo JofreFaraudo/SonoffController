@@ -1,0 +1,45 @@
+<html lang="es-es">
+	<head>
+		<title>Controlador web de Sonoff</title>
+		<link rel="icon" href="favicon.png">
+		<style>.btn-outline-warning:hover{color:white !important}body{background:#DDD !important;padding-top:1rem;cursor:default !important;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}.ctrl-btn{width:120px}.ctrl-btn.btn-dark::before{content:"Apagado"}.ctrl-btn.btn-light::before{content:"Encendido"}.ctrl-btn.btn-dark:hover::before{content:"Encender"}.ctrl-btn.btn-light:hover:before{content:"Apagar"}</style>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript" language="javascript"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<body>
+		<div class="container">
+			<noscript>
+				<div class="card">
+					<h1 class="card-header bg-warning text-white">¡Error!</h1>
+					<div class="card-body text-warning border border-warning">Por favor, active el Javascript.</div>
+				</div>
+			</noscript>
+			<div class="card" id="page-body" style="display:none">
+				<h2 class="card-header bg-success text-white">Controlador WEB de los Sonoff</h2>
+				<div class="card-body border border-success">
+					<div class="row" id="sonoff-menu">
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" language="javascript">
+			$(document).ready(function(){
+				$("html").contextmenu(function(e){
+					e.preventDefault()
+				});
+				var sonoff = ["SonofFrambuesilla"];
+				sonoff.forEach(function(n){
+					$.post("https://maker.ifttt.com/trigger/"+n+"off/with/key/eTlEveh-Yy67KqAwWju8ljYE0JPFnfm-WvEq_KdGgzp");
+					$("#sonoff-menu").append("<div class=\"col-12\"><h3>"+n+"</h3><span>Estado:</span> <button class=\"btn btn-dark border ctrl-btn\" jsdata=\""+n+"\"></button></div>")
+				});
+				$("#page-body").fadeIn(600);
+				$(".ctrl-btn").click(function(){
+					var e = $(this).hasClass("btn-light");
+					$(this).addClass("btn-"+(e ? "dark" : "light")).removeClass("btn-"+((e ? "light" : "dark"))).blur()
+					$.post("https://maker.ifttt.com/trigger/"+$(this).attr("jsdata")+(e ? "off" : "on")+"/with/key/eTlEveh-Yy67KqAwWju8ljYE0JPFnfm-WvEq_KdGgzp")
+				})
+			})
+		</script>
+	</body>
+</html>
